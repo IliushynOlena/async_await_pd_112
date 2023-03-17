@@ -5,19 +5,28 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_02_file_copy"
         mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        d:DataContext="{d:DesignInstance local:ViewModel}"
         Title="MainWindow" Height="450" Width="800">
     <Window.Resources>
-        <Style TargetType="{x:Type Button}">
+        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignRaisedDarkButton}">
             <Setter Property="Margin" Value="5"> </Setter>
             <Setter Property="Padding" Value="5"> </Setter>
         </Style>
-        <Style TargetType="{x:Type TextBox}" >
+        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource MaterialDesignTextBox}">
             <Setter Property="Margin" Value="5"></Setter>
             <Setter Property="IsReadOnly" Value="True"></Setter>
             <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
         </Style>
     </Window.Resources>
-    <DockPanel LastChildFill="False">
+    <DockPanel LastChildFill="True">
         <Grid Margin="5" DockPanel.Dock="Top">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -31,16 +40,48 @@
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
             <Label>From :</Label>
-            <TextBox Text="{Binding Source}" Grid.Column="1"></TextBox>
+            <TextBox  Text="{Binding Source}" Grid.Column="1"></TextBox>
             <Label Grid.Row="1">To :</Label>
             <TextBox Text="{Binding Destination}" x:Name="destTextBox" Grid.Column="1" Grid.Row="1"></TextBox>
             <Button Click="OpenSourceClick" Grid.Column="2" Grid.Row="0">Browse</Button>
-            <Button Click="OpenDestClick" Grid.Column="2" Grid.Row="1">Browse</Button>         
+            <Button Click="OpenDestClick" Grid.Column="2" Grid.Row="1">Browse</Button>      
 
         </Grid>
-        <Button Click="CopyButtonClick" Padding="10"  DockPanel.Dock ="Top">Copy</Button>
+        <Button Click="CopyButtonClick" DockPanel.Dock ="Top">Copy</Button>
         <ProgressBar Value="{Binding Progress}" DockPanel.Dock="Bottom" Height="10" 
                      IsIndeterminate="{Binding IsWaiting}"></ProgressBar>
+        <ListBox HorizontalContentAlignment="Stretch" ItemsSource="{Binding Processes}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <materialDesign:Card
+                                          Background="{DynamicResource PrimaryHueDarkBrush}"
+                                          Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"
+                                          Padding="8"
+                                          UniformCornerRadius="6">
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" ></ColumnDefinition>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding FileName}"
+                                       MaxWidth="150" TextTrimming="CharacterEllipsis"
+                                       ></TextBlock>
+                            <TextBlock Grid.Column="1">Speed : <Run Text="{Binding MegaBytesPerSecond, Mode = OneWay}"/>Mb/s</TextBlock>
+                            <ProgressBar Foreground="{StaticResource PrimaryHueMidBrush}" Height="10" Grid.Column="2" Margin="5,0,5,0" Value="{Binding Percentage}"></ProgressBar>
+                            <TextBlock Grid.Column="3"><Run Text="{Binding PercentageInt, Mode=OneWay}"/>%</TextBlock>
+
+                        </Grid>
+                        
+                    </materialDesign:Card>
+                  
+                </DataTemplate>                
+            </ListBox.ItemTemplate>
+          
+            
+        </ListBox>
     </DockPanel>
    
 </Window>
